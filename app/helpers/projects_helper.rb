@@ -17,6 +17,7 @@ module ProjectsHelper
 
   def can_contribute?(project)
     session[:contrib_access] == project.id ||
-      (@cur_user.try(:id) && !project.lock?)
+      (@cur_user.try(:id) && !project.lock?) || 
+      (project.lock? && !session[:key].nil?)
   end
 end

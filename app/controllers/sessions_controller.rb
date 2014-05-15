@@ -5,6 +5,8 @@ class SessionsController < ApplicationController
 
   # GET /sessions/new
   def new
+    session[:key] = nil
+    session[:contrib_access] = nil
     if request.referrer && !(URI(request.referrer).path == login_path)
       if request.referrer.include? '/users'
         session[:redirect_to] = '/home/index'
@@ -18,7 +20,8 @@ class SessionsController < ApplicationController
 
   def create
     login_email = params[:email].downcase
-
+    session[:key] = nil
+    session[:contrib_access] = nil
     @user = User.where('lower(email) = ?', login_email).first
 
     if @user and @user.authenticate(params[:password])
@@ -41,6 +44,8 @@ class SessionsController < ApplicationController
 
   def destroy
     session[:user_id] = nil
+    session[:key] = nil
+    session[:contrib_access] = nil
     respond_to do |format|
       format.html { redirect_to :back, notice: 'Logged out' }
       format.json { render json: {}, status: :ok }
