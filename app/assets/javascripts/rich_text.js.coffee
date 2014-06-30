@@ -11,6 +11,10 @@ showEditor = () ->
       ['misc', ['codeview']],
       ['insert', ['picture', 'link']],
     ]
+    #onImageUpload:
+      #console.log('2chainz')
+    #onFileUpload:
+      #console.log('onFileUpload')
   })
   
   $('#content-area').code($('#content-area').val())

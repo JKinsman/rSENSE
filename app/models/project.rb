@@ -1,4 +1,5 @@
 require 'nokogiri'
+require 'base64'
 
 class Project < ActiveRecord::Base
   include ApplicationHelper
@@ -11,6 +12,7 @@ class Project < ActiveRecord::Base
   validates :title, length: { maximum: 128 }
 
   before_save :sanitize_project
+  before_save :summernote_media_objects
 
   has_many :fields
   has_many :data_sets, -> { order('created_at desc') }
@@ -196,7 +198,7 @@ class Project < ActiveRecord::Base
     new_project = Project.new
     new_project.user_id = user_id
     new_project.cloned_from = id
-
+    new_project.content = Project.find(params[:project_id]).content
     # Determine Name
     if params[:project_name].nil?
       new_project.title = "#{title} (clone)"
@@ -268,6 +270,20 @@ class Project < ActiveRecord::Base
     end
     new_project
   end
+
+def summernote_media_objects
+  puts "THIS IS A TEST STRING!!!!!!!!!!!!!!!!!!!!!!!"
+  text = Nokogiri.HTML(content).search('img')
+  #puts "\n\n\n\nFIND TEST" + text['src'].partition('/')[2].split('jpeg;base64,/')[1] + "\n\n\n\n\n"
+  Nokogiri.HTML(content).search('img').remove
+  text.each do |picture|
+    
+    data = Base64.decode64(picture['src'].partition('/')[2].split('jpeg;base64,/')[1])
+    
+  end
 end
+  
+end
+
 
 # where filter like filters[0] AND filter like filters[1]
