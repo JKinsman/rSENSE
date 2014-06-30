@@ -157,8 +157,6 @@ IS.onReady "projects/show", ->
 
   ($ 'a.data_set_delete').click (e) ->
     e.preventDefault()
-    
-    alert('tacos')
 
     url = ($ @).attr('href')
     row = ($ @).parents('tr')

@@ -11,10 +11,6 @@ showEditor = () ->
       ['misc', ['codeview']],
       ['insert', ['picture', 'link']],
     ]
-    #onImageUpload:
-      #console.log('2chainz')
-    #onFileUpload:
-      #console.log('onFileUpload')
   })
   
   $('#content-area').code($('#content-area').val())
@@ -35,3 +31,7 @@ $ ->
     if $('#add-content-image')?
       $('#add-content-image').click(showEditor)
     $('#content-cancel-btn').click(hideEditor)
+    #($ 'btn.btn-primary.note-image-btn').change (e) ->
+      #console.log('Image uploaded')
+    ($ 'div.modal-content').find('btn.btn-primary.note-image-btn').click (e) ->
+      console.log "TESTING"

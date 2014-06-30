@@ -1,6 +1,6 @@
 require 'nokogiri'
 require 'base64'
-
+require 'pathname'
 class Project < ActiveRecord::Base
   include ApplicationHelper
   include ActionView::Helpers::DateHelper
@@ -271,15 +271,34 @@ class Project < ActiveRecord::Base
     new_project
   end
 
-def summernote_media_objects
-  puts "THIS IS A TEST STRING!!!!!!!!!!!!!!!!!!!!!!!"
-  text = Nokogiri.HTML(content).search('img')
-  #puts "\n\n\n\nFIND TEST" + text['src'].partition('/')[2].split('jpeg;base64,/')[1] + "\n\n\n\n\n"
-  Nokogiri.HTML(content).search('img').remove
-  text.each do |picture|
-    
-    data = Base64.decode64(picture['src'].partition('/')[2].split('jpeg;base64,/')[1])
-    
+  def summernote_media_objects
+    puts "THIS IS A TEST STRING!!!!!!!!!!!!!!!!!!!!!!!"
+    text = Nokogiri.HTML(self.content).search('img')
+    puts "\n\n\n\n"
+    puts text[0]['src'].partition('/')[2].split('jpeg;base64,/')[1]
+    puts "\n\n\n\n"
+    puts  text[0]['src']
+    #Nokogiri.HTML(content).search('img').remove
+    text.each do |picture|    
+    if picture['src'].include?('data:image')
+      data = picture['src'].partition('/')[2]
+      #data = Base64.decode64(picture['src'].partition('/')[2].split('jpeg;base64,/')[1]) 
+      #puts "\n\n\n\n\n\n\n\n" + data + "\n\n\n\n\n\n"
+      puts "DEBUG:  WATS DATA?\n\n\n"
+      puts data
+      puts "\n\n\n\n"
+      params = {}
+      params[:image_data] = data
+      params[:upload_type] = "Project"
+      params[:proj_id] = self.id
+      summernote_mo = MediaObject.new
+      summernote_mo.summernote_image(params)
+      #abs_path = Pathname.new
+      self.content = "<img src='http://localhost:3000" + summernote_mo.src + summernote_mo.name + "'> </img>" + self.content
+      summernote_mo.save!
+      
+    end
+    #Nokogiri.HTML(content).search(picture).remove
   end
 end
   

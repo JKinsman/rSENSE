@@ -1,4 +1,4 @@
-
+require 'securerandom'
 require 'store_file'
 
 class MediaObject < ActiveRecord::Base
@@ -130,7 +130,26 @@ class MediaObject < ActiveRecord::Base
     nmo.save!
     nmo
   end
-
+  def summernote_image(params)
+    puts "\n\n\n\n" + params[:upload_type] + "\n\n\n\n"
+    self.id = Project.find(params[:proj_id]).media_objects
+    self.project_id = params[:proj_id]
+    self.media_type = 'image'
+    self.name = "Uploaded-Image" + SecureRandom.hex[0...5] + ".jpg"
+    self.created_at = Time.now.strftime('%B %d, %Y')
+    imgFile = File.new("newfile.jpg", 'w')
+    imgFile.write params[:image_data]
+    puts imgFile
+    #FileUtils.cp(imgFile, self.file)
+    puts "self.src = ?\n"
+    puts self.src
+    self.store_key = nil
+    self.check_store!
+    self.sanitize_media
+    #self.add_tn
+    #self.save!
+    puts "INSPECTING:\n\n\n\n" + self.inspect
+  end
   private
 
   def remove_data!
@@ -139,4 +158,5 @@ class MediaObject < ActiveRecord::Base
   rescue Errno::ENOENT
     # whatever
   end
+  
 end
