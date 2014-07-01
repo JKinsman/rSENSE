@@ -130,36 +130,34 @@ class MediaObject < ActiveRecord::Base
     nmo.save!
     nmo
   end
-  
-  def summernote_image(params)  
+
+  def summernote_image(params)
     if params[:proj_id]
       self.project_id = params[:proj_id]
-      #self.id = Project.find(params[:proj_id]).media_objects.length
       self.user_id = Project.find(params[:proj_id]).user_id
     elsif params[:news_id]
       self.news_id = params[:news_id]
-      #self.id = News.find(params[:news_id]).media_objects.length
       self.user_id = News.find(params[:news_id]).user_id
     elsif params[:viz_id]
       self.user_id = Visualization.find(params[:viz_id]).user_id
       self.visualization_id = params[:viz_id]
-      #self.id = Visualization.find(params[:viz_id]).media_objects.length
     else
       self.user_id = params[:user_id]
     end
     self.media_type = 'image'
-    self.name = "Uploaded Image " + SecureRandom.hex[0...5] + "#{params[:file_type]}"
-    self.file = "#{self.name}"
-    self.sanitize_media
+    self.name = 'Uploaded Image ' + SecureRandom.hex[0...5] + "#{params[:file_type]}"
+    self.file = "#{name}"
+    sanitize_media
     self.created_at = Time.now.strftime('%B %d, %Y')
     self.store_key = nil
     self.check_store!
-    imgFile = File.open("#{self.file_name}", 'wb+') do |f|
+    File.open("#{file_name}", 'wb+') do |f|
       f.write params[:image_data]
       f.chmod(0644)
     end
-    self.add_tn
+    add_tn
   end
+
   private
 
   def remove_data!
@@ -168,5 +166,4 @@ class MediaObject < ActiveRecord::Base
   rescue Errno::ENOENT
     # whatever
   end
-  
 end

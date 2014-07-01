@@ -34,4 +34,3 @@ $ ->
     #($ 'btn.btn-primary.note-image-btn').change (e) ->
       #console.log('Image uploaded')
     ($ 'div.modal-content').find('btn.btn-primary.note-image-btn').click (e) ->
-      console.log "TESTING"

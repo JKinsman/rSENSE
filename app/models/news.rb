@@ -6,13 +6,13 @@ class News < ActiveRecord::Base
   validates :title, length: { maximum: 128 }
   validates :summary, length: { maximum: 256 }
   has_many :media_objects
-  
+
   belongs_to :user
   alias_attribute :owner, :user
 
   validates_presence_of :title
   before_save :summernote_media_objects
-  
+
   def to_hash(recurse = false)
     h = {
       id: id,
@@ -33,19 +33,19 @@ class News < ActiveRecord::Base
       h.merge!(mediaSrc: media_objects.find(featured_media_id).tn_src)
     end
   end
+
   def summernote_media_objects
-    text = Nokogiri.HTML(self.content)
-    text.search('img').each do |picture|  
-      if picture['src'].include?('data:image')                                   
-        data = Base64.decode64(picture['src'].partition('/')[2].split('base64,')[1]) 
+    text = Nokogiri.HTML(content)
+    text.search('img').each do |picture|
+      if picture['src'].include?('data:image')
+        data = Base64.decode64(picture['src'].partition('/')[2].split('base64,')[1])
         params = {}
         if picture['src'].partition('/')[2].split('base64,')[0].include? 'png'
-          params[:file_type] = ".png"
-        else params[:file_type] = ".jpg"
-        end        
+          params[:file_type] = '.png'
+        else params[:file_type] = '.jpg'
+        end
         params[:image_data] = data
-        params[:upload_type] = "Project"
-        params[:news_id] = self.id
+        params[:news_id] = id
         summernote_mo = MediaObject.new
         summernote_mo.summernote_image(params)
         summernote_mo.save!

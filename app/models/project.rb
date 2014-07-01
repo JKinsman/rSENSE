@@ -271,18 +271,17 @@ class Project < ActiveRecord::Base
   end
 
   def summernote_media_objects
-    text = Nokogiri.HTML(self.content)
-    text.search('img').each do |picture|  
-      if picture['src'].include?('data:image')                                   
-        data = Base64.decode64(picture['src'].partition('/')[2].split('base64,')[1]) 
+    text = Nokogiri.HTML(content)
+    text.search('img').each do |picture|
+      if picture['src'].include?('data:image')
+        data = Base64.decode64(picture['src'].partition('/')[2].split('base64,')[1])
         params = {}
         if picture['src'].partition('/')[2].split('base64,')[0].include? 'png'
-          params[:file_type] = ".png"
-        else params[:file_type] = ".jpg"
-        end        
+          params[:file_type] = '.png'
+        else params[:file_type] = '.jpg'
+        end
         params[:image_data] = data
-        params[:upload_type] = "Project"
-        params[:proj_id] = self.id
+        params[:proj_id] = id
         summernote_mo = MediaObject.new
         summernote_mo.summernote_image(params)
         summernote_mo.save!
@@ -291,6 +290,6 @@ class Project < ActiveRecord::Base
     end
     self.content = text.to_html
   end
-end  
+end
 
 # where filter like filters[0] AND filter like filters[1]

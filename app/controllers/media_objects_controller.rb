@@ -65,7 +65,6 @@ class MediaObjectsController < ApplicationController
 
   # POST /media_object/saveMedia
   def saveMedia
-    puts "_________INSPECTING_______\n\n\n\n\n" + params.inspect + "___________________\n\n\n\n\n"
     # Figure out where we are uploading data to
     data = params[:keys].split('/')
     target = data[0]
