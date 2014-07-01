@@ -22,7 +22,8 @@ class Visualization < ActiveRecord::Base
   alias_attribute :name, :title
 
   before_save :sanitize_viz
-
+  before_save :summernote_media_objects
+  
   belongs_to :user
   belongs_to :project
 
@@ -90,6 +91,26 @@ class Visualization < ActiveRecord::Base
         owner:        owner.to_hash(false)
       )
     end
-    h
+  end
+  def summernote_media_objects
+    text = Nokogiri.HTML(self.content)
+    text.search('img').each do |picture|  
+      if picture['src'].include?('data:image')                                   
+        data = Base64.decode64(picture['src'].partition('/')[2].split('base64,')[1]) 
+        params = {}
+        if picture['src'].partition('/')[2].split('base64,')[0].include? 'png'
+          params[:file_type] = ".png"
+        else params[:file_type] = ".jpg"
+        end        
+        params[:image_data] = data
+        params[:upload_type] = "Project"
+        params[:viz_id] = self.id
+        summernote_mo = MediaObject.new
+        summernote_mo.summernote_image(params)
+        summernote_mo.save!
+        picture['src'] = summernote_mo.src
+      end
+    end
+    self.content = text.to_html
   end
 end
