@@ -11,7 +11,7 @@ class News < ActiveRecord::Base
   alias_attribute :owner, :user
 
   validates_presence_of :title
-  before_save :summernote_media_objects
+  #before_save :summernote_media_objects
 
   def to_hash(recurse = false)
     h = {

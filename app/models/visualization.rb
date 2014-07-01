@@ -22,13 +22,12 @@ class Visualization < ActiveRecord::Base
   alias_attribute :name, :title
 
   before_save :sanitize_viz
-  before_save :summernote_media_objects
 
   belongs_to :user
   belongs_to :project
-
   alias_attribute :owner, :user
-
+  #before_save :summernote_media_objects
+  
   def tn_src
     mo = MediaObject.find_by_id(thumb_id)
     if mo
