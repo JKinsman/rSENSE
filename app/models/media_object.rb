@@ -146,9 +146,8 @@ class MediaObject < ActiveRecord::Base
     end
     self.media_type = 'image'
     self.name = 'Uploaded Image ' + SecureRandom.hex[0...5] + "#{params[:file_type]}"
-    self.file = "#{name}"
+    self.file = name.split('.')[0] + SecureRandom.hex + "." + name.split('.')[1]
     sanitize_media
-    self.created_at = Time.now.strftime('%B %d, %Y')
     self.store_key = nil
     self.check_store!
     File.open("#{file_name}", 'wb+') do |f|
