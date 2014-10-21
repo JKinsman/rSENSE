@@ -108,7 +108,9 @@ class MediaObject < ActiveRecord::Base
     if media_type == 'image'
       # make the thumbnail
       image = MiniMagick::Image.open(file_name)
-      image.resize '180'
+      unless file_name.include? '.svg'
+        image.resize '180'
+      end
 
       # finish up
       File.open(tn_file_name, 'wb') do |oo|
@@ -159,7 +161,7 @@ class MediaObject < ActiveRecord::Base
         if picture['src'].partition('/')[2].split('base64,')[0].include? 'png'
           file_type = '.png'
         elsif picture['src'].partition('/')[2].split('base64,')[0].include? 'svg'
-          file_type = '.png'
+          file_type = '.svg'
         else file_type = '.jpg'
         end
         summernote_mo = MediaObject.new
