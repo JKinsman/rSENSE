@@ -114,6 +114,7 @@ class RefactorSavedRegressions < ActiveRecord::Migration
       end
       #puts globals.inspect
     v.globals = globals.to_json
+    v.save
     end
   end
 end

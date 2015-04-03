@@ -780,7 +780,7 @@ $ ->
 
         # Here have a list of regressions
         regressions = ['Linear', 'Quad', 'Cubic', 'Exp', 'Log', 'Auto']
-
+        console.log savedReg
         # Add the entry used the passed regression
         regressionRow =
           """
