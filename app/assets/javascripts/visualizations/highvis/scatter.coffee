@@ -782,9 +782,10 @@ $ ->
         regressions = ['Linear', 'Quad', 'Cubic', 'Exp', 'Log', 'Auto']
 
         # Add the entry used the passed regression
+        console.log savedReg
         y = if typeof(savedReg.yAxis) is 'number' then savedReg.yAxis else savedReg.yAxis[0]
-	x = if typeof(savedReg.xAxis) is 'number' then savedReg.xAxis else savedReg.xAxis[0]  
-	regressionRow =
+        x = if typeof(savedReg.xAxis) is 'number' then savedReg.xAxis else savedReg.xAxis[0]  
+        regressionRow =
           """
           <tr id ='row_#{savedReg.id}' class='regression_row'>
           <td class='regression_rowdata truncate'>#{data.fields[y].fieldName}(#{data.fields[x].fieldName})</td>
