@@ -782,10 +782,12 @@ $ ->
         regressions = ['Linear', 'Quad', 'Cubic', 'Exp', 'Log', 'Auto']
 
         # Add the entry used the passed regression
-        regressionRow =
+        y = if typeof(savedReg.yAxis) is 'number' then savedReg.yAxis else savedReg.yAxis[0]
+	x = if typeof(savedReg.xAxis) is 'number' then savedReg.xAxis else savedReg.xAxis[0]  
+	regressionRow =
           """
           <tr id ='row_#{savedReg.id}' class='regression_row'>
-          <td class='regression_rowdata truncate'>#{data.fields[savedReg.yAxis].fieldName}(#{data.fields[savedReg.xAxis].fieldName})</td>
+          <td class='regression_rowdata truncate'>#{data.fields[y].fieldName}(#{data.fields[x].fieldName})</td>
           <td class='regression_rowdata'>#{regressions[savedReg.type]}</td>
           <td id='#{savedReg.id}' class='regression_remove'><i class='fa fa-times-circle'></i></td>
           </tr>
@@ -793,7 +795,6 @@ $ ->
 
         # Added info relating to this regression
         $('#regression-table-body').append(regressionRow)
-
         # Add the disabled style if necessary
         if !enabled
           $('tr#row_' + savedReg.id).addClass('regression_row_disabled')
